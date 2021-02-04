@@ -1,0 +1,35 @@
+{
+  "name": "blurhash-to-css",
+  "description": "Convert a blurhash string to a CSS object",
+  "version": "0.0.0",
+  "author": "Jamie Mason <jamie@foldleft.io> (https://github.com/JamieMason)",
+  "bugs": "https://github.com/JamieMason/blurhash-to-css/issues",
+  "dependencies": {
+    "@plaiceholder/css": "1.0.0",
+    "blurhash": "1.1.3",
+    "sharp": "0.27.1"
+  },
+  "devDependencies": {
+    "@types/sharp": "0.27.1",
+    "typescript": "4.1.3"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "blurhash",
+    "plaiceholder",
+    "sharp"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "JamieMason/blurhash-to-css",
+  "scripts": {
+    "build": "tsc --project .",
+    "prebuild": "rm -rf ./dist",
+    "prepack": "npm run build"
+  }
+}

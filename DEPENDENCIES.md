@@ -13,18 +13,23 @@ or [`yarn`](https://yarnpkg.com/en/) command line tools.
 npm install blurhash-to-css --save
 ```
 
+## Tests
+
+```sh
+npm install
+npm test
+```
+
 ## Dependencies
 
-- [@plaiceholder/css](https://ghub.io/@plaiceholder/css): Roll-you-own CSS
-  gradient placeholders.
-- [blurhash](https://ghub.io/blurhash): Encoder and decoder for the Wolt
-  BlurHash algorithm.
-- [sharp](https://ghub.io/sharp): High performance Node.js image processing, the
-  fastest module to resize JPEG, PNG, WebP, AVIF and TIFF images
+None
 
 ## Dev Dependencies
 
-- [@types/sharp](https://ghub.io/@types/sharp): TypeScript definitions for sharp
+- [@types/jest](https://ghub.io/@types/jest): TypeScript definitions for Jest
+- [jest](https://ghub.io/jest): Delightful JavaScript Testing.
+- [ts-jest](https://ghub.io/ts-jest): A preprocessor with source maps support to
+  help use TypeScript with Jest
 - [typescript](https://ghub.io/typescript): TypeScript is a language for
   application scale JavaScript development
 

@@ -1,12 +1,14 @@
-import sharp from "sharp";
-import { decode } from "blurhash";
-import { getPixelsCSS } from "@plaiceholder/css";
+import sharp from 'sharp';
+import { decode } from 'blurhash';
+import { getPixelsCSS } from '@plaiceholder/css';
 
 export interface BlurhashCss {
   backgroundImage: string;
   backgroundPosition: string;
   backgroundSize: string;
   backgroundRepeat: string;
+  filter: string;
+  transform: string;
 }
 
 export async function blurhashToCss({

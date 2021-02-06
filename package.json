@@ -4,9 +4,15 @@
   "version": "0.2.1",
   "author": "Jamie Mason <jamie@foldleft.io> (https://github.com/JamieMason)",
   "bugs": "https://github.com/JamieMason/blurhash-to-css/issues",
+  "dependencies": {
+    "tslib": "2.1.0"
+  },
   "devDependencies": {
+    "@rollup/plugin-typescript": "8.1.1",
     "@types/jest": "26.0.20",
+    "@wasm-tool/rollup-plugin-rust": "1.0.5",
     "jest": "26.6.3",
+    "rollup": "2.38.5",
     "ts-jest": "26.5.0",
     "typescript": "4.1.3"
   },
@@ -14,9 +20,7 @@
     "node": ">=10"
   },
   "files": [
-    "index.d.ts",
-    "index.js",
-    "pkg"
+    "dist"
   ],
   "keywords": [
     "blur",
@@ -36,14 +40,14 @@
     "webperf"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "manager": "yarn",
   "repository": "JamieMason/blurhash-to-css",
   "scripts": {
-    "build": "npm run build:wasm && npm run build:ts",
-    "build:ts": "rm -rf ./dist && tsc --project .",
-    "build:wasm": "rm -rf ./pkg && wasm-pack build --target nodejs",
-    "prepack": "npm run build",
-    "test": "npm run test:wasm && npm run test:ts",
+    "build": "rollup --config",
+    "prebuild": "rm -rf ./dist && rm -rf ./target",
+    "prepack": "yarn build",
+    "test": "yarn test:wasm && yarn test:ts",
     "test:ts": "jest",
     "test:wasm": "cargo test"
   }

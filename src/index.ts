@@ -1,4 +1,4 @@
-import { blurhash_to_css } from './pkg/blurhash_to_css';
+import wasm from '../Cargo.toml';
 
 export interface BlurhashCss {
   backgroundImage: string;
@@ -9,7 +9,7 @@ export interface BlurhashCss {
   transform: string;
 }
 
-export function blurhashToCss({
+export async function blurhashToCss({
   blurhash,
   width,
   height,
@@ -17,6 +17,8 @@ export function blurhashToCss({
   blurhash: string;
   width: number;
   height: number;
-}): BlurhashCss {
-  return JSON.parse(blurhash_to_css(blurhash, width, height)) as BlurhashCss;
+}): Promise<BlurhashCss> {
+  const exports = await wasm();
+  const json = exports.blurhash_to_css(blurhash, width, height);
+  return JSON.parse(json) as BlurhashCss;
 }

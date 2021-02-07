@@ -1,3 +1,10 @@
+## [0.3.3](https://github.com/JamieMason/blurhash-to-css/compare/0.3.2...0.3.3) (2021-02-07)
+
+### Bug Fixes
+
+- **options:** make width and height optional
+  ([0dbe68d](https://github.com/JamieMason/blurhash-to-css/commit/0dbe68d7363fdb84b6f60a3e02e562a782b6b65a))
+
 ## [0.3.2](https://github.com/JamieMason/blurhash-to-css/compare/0.3.1...0.3.2) (2021-02-07)
 
 ### Bug Fixes

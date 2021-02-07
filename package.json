@@ -41,10 +41,11 @@
   "scripts": {
     "build": "npm run build:wasm && npm run build:ts",
     "build:ts": "rm -rf ./dist && tsc --project .",
-    "build:wasm": "rm -rf ./pkg && wasm-pack build --target nodejs",
+    "build:wasm": "rm -rf ./pkg && wasm-pack build --release --target nodejs",
     "prepack": "npm run build",
     "test": "npm run test:wasm && npm run test:ts",
     "test:ts": "jest",
     "test:wasm": "cargo test"
-  }
+  },
+  "types": "index.d.ts"
 }

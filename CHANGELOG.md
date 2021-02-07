@@ -1,3 +1,10 @@
+## [0.3.2](https://github.com/JamieMason/blurhash-to-css/compare/0.3.1...0.3.2) (2021-02-07)
+
+### Bug Fixes
+
+- **node:** revert bundling and inlining source
+  ([5f182ea](https://github.com/JamieMason/blurhash-to-css/commit/5f182ead880ddd57bed3416abaaca7a82726bf9e))
+
 ## [0.3.1](https://github.com/JamieMason/blurhash-to-css/compare/0.2.1...0.3.1) (2021-02-07)
 
 ### Features

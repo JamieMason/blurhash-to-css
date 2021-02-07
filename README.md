@@ -26,6 +26,9 @@ on the critical path when loading our application.
 This tool creates the same visual effect using CSS, which can be rendered on the Server without any
 dependency on client-side JavaScript.
 
+An example can be seen at https://blurhash-to-css.vercel.app and the source is in this repo at
+[`/example`](https://github.com/JamieMason/blurhash-to-css/tree/main/example).
+
 ## 🤝 Credit
 
 - The image buffer to CSS conversion is a port to Rust of

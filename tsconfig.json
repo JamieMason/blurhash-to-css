@@ -8,5 +8,5 @@
     "strict": true,
     "target": "ES2019"
   },
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["example", "**/*.spec.ts"]
 }

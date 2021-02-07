@@ -12,7 +12,7 @@ export const getStaticProps = async () => {
     props: {
       photos: photos.map((photo) => ({
         ...photo,
-        style: blurhashToCss({ blurhash: photo.blur_hash, width: 100, height: 100 }),
+        style: blurhashToCss(photo.blur_hash),
       })),
     },
   };

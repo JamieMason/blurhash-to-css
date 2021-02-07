@@ -1,3 +1,10 @@
+## [0.3.1](https://github.com/JamieMason/blurhash-to-css/compare/0.2.1...0.3.1) (2021-02-07)
+
+### Features
+
+- **node:** bundle source and inline wasm
+  ([a3d9cfc](https://github.com/JamieMason/blurhash-to-css/commit/a3d9cfca12dd2d59ffc5b34ffdd54cb719a6c7f0))
+
 ## [0.2.1](https://github.com/JamieMason/blurhash-to-css/compare/0.1.0...0.2.1) (2021-02-06)
 
 ### Bug Fixes

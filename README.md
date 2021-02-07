@@ -43,11 +43,7 @@ An example can be seen at https://blurhash-to-css.vercel.app and the source is i
 ```ts
 import { blurhashToCss } from 'blurhash-to-css';
 
-const css = blurhashToCss({
-  blurhash: 'eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU',
-  height: 400,
-  width: 600,
-});
+const css = blurhashToCss('eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU');
 ```
 
 ↓↓↓↓↓
@@ -71,7 +67,7 @@ const { blurhashToCss } = require('blurhash-to-css');
 
 ## 🛠 Options
 
-### `blurhash`
+### `blurhash` (required)
 
 A small string generated to represent a blurry version of an image which will download sometime
 soon. Have a play around on [BlurHash](https://blurha.sh),
@@ -79,8 +75,14 @@ soon. Have a play around on [BlurHash](https://blurha.sh),
 [BlurHash for imgix: An Alternative to Generic Image Placeholders](https://blog.imgix.com/2021/01/26/blurhash)
 to try them out and find out more.
 
-### `width` and `height`
+### `width` and `height` (optional)
 
-The purpose of the `height` and `width` properties are to provide the physical dimensions of the
-original image which was encoded into your blurhash so it can be parsed for processing – it is not
-related to the size you want to display the image in your app.
+The BlurHash is decoded into a 10 x 10 image by default, you can make this larger and it will look
+more like the final image, but it will also generate a lot more CSS.
+
+```ts
+const css = blurhashToCss('eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU', {
+  height: 30,
+  width: 30,
+});
+```

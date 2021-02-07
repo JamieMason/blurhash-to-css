@@ -9,14 +9,11 @@ export interface BlurhashCss {
   transform: string;
 }
 
-export function blurhashToCss({
-  blurhash,
-  width,
-  height,
-}: {
-  blurhash: string;
-  width: number;
-  height: number;
-}): BlurhashCss {
+export function blurhashToCss(
+  blurhash: string,
+  options?: { width: number; height: number }
+): BlurhashCss {
+  const height = options?.height || 10;
+  const width = options?.width || 10;
   return JSON.parse(blurhash_to_css(blurhash, width, height)) as BlurhashCss;
 }

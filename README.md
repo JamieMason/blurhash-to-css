@@ -7,7 +7,6 @@
 
 [![NPM version](http://img.shields.io/npm/v/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
 [![NPM downloads](http://img.shields.io/npm/dm/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
-[![Build Status](http://img.shields.io/travis/JamieMason/blurhash-to-css/master.svg?style=flat-square)](https://travis-ci.org/JamieMason/blurhash-to-css)
 [![Follow JamieMason on GitHub](https://img.shields.io/github/followers/JamieMason.svg?style=social&label=Follow)](https://github.com/JamieMason)
 [![Follow fold_left on Twitter](https://img.shields.io/twitter/follow/fold_left.svg?style=social&label=Follow)](https://twitter.com/fold_left)
 

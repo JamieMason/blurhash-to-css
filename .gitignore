@@ -1,9 +1,10 @@
-.DS_Store
 *.log
 *.log.*
 *.tgz
-index.d.ts
-index.js
-node_modules
-pkg
-target
+**/.DS_Store
+**/*~
+**/node_modules
+dist
+native/artifacts.json
+native/index.node
+native/target

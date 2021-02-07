@@ -1,24 +1,20 @@
-import wasm from '../Cargo.toml';
+const rust = require('../native');
 
-export interface BlurhashCss {
+export function blurhashToCss({
+  blurhash,
+  height,
+  width,
+}: {
+  blurhash: string;
+  height: number;
+  width: number;
+}): {
   backgroundImage: string;
   backgroundPosition: string;
   backgroundSize: string;
   backgroundRepeat: string;
   filter: string;
   transform: string;
-}
-
-export async function blurhashToCss({
-  blurhash,
-  width,
-  height,
-}: {
-  blurhash: string;
-  width: number;
-  height: number;
-}): Promise<BlurhashCss> {
-  const exports = await wasm();
-  const json = exports.blurhash_to_css(blurhash, width, height);
-  return JSON.parse(json) as BlurhashCss;
+} {
+  return rust.blurhashToCss(blurhash, width, height);
 }

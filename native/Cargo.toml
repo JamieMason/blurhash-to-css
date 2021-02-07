@@ -1,0 +1,22 @@
+[package]
+name = "blurhash-to-css"
+version = "0.3.1"
+authors = ["Jamie Mason <jamie@foldleft.io> (https://github.com/JamieMason) <jamie@foldleft.io>"]
+license = "MIT"
+build = "build.rs"
+edition = "2018"
+exclude = ["artifacts.json", "index.node"]
+
+[lib]
+name = "blurhash_to_css"
+crate-type = ["cdylib"]
+
+[build-dependencies]
+neon-build = "0.3.3"
+
+[dependencies]
+blurhash = "0.1.1"
+image = "0.21.0"
+neon = "0.3.3"
+serde = "1.0.80"
+serde_derive = "1.0.80"

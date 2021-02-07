@@ -1,9 +1,8 @@
 # blurhash-to-css
 
-> Converts a [BlurHash](https://blurha.sh) to a
+> Convert a [BlurHash](https://blurha.sh) String to a
 > [CSS Object](https://developer.mozilla.org/en-US/docs/Web/API/ElementCSSInlineStyle/style) using
-> [TypeScript](https://www.typescriptlang.org/), [Rust](https://www.rust-lang.org/), and
-> [WebAssembly](https://github.com/rustwasm/wasm-pack).
+> [TypeScript](https://www.typescriptlang.org/) and [Rust](https://www.rust-lang.org/).
 
 [![NPM version](http://img.shields.io/npm/v/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
 [![NPM downloads](http://img.shields.io/npm/dm/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
@@ -19,22 +18,13 @@ npm install blurhash-to-css
 
 ## 📣 Summary
 
-[BlurHash](https://blurha.sh) is a compact representation of a placeholder for an image, it is a
-great option to
-[improve perceived load times and offer a better user experience when a connection or site is slow to load images](https://blog.imgix.com/2021/01/26/blurhash).
-But BlurHash is rendered using a `<canvas>` element, which means some client-side JavaScript is
-needed to render it. The goal is to have our images feel like they're loading as fast as we possibly
-can, and we will need to run this JS on the critical path when loading our application.
+[BlurHash](https://blurha.sh) is a compact representation of a placeholder for an image, which makes
+it a great option to [improve perceived load times](https://blog.imgix.com/2021/01/26/blurhash). A
+BlurHash is rendered using a `<canvas>` element, which means client-side JavaScript is needed on the
+critical path when loading our application.
 
-This tool was created based on the premise that achieving this same visual effect via CSS rendered
-on the Server will be easier to implement and should also be more efficient due to not having any
+This tool creates the same visual effect using CSS, which can be rendered on the Server without any
 dependency on client-side JavaScript.
-
-With this tool in place, we can try both approaches and measure whether rendering a CSS BlurHash is
-in fact faster than using a `<canvas>`. This approach uses CSS transforms and filters, which _may_
-be expensive in other ways?
-
-Let's find out.
 
 ## 🤝 Credit
 
@@ -50,7 +40,7 @@ Let's find out.
 ```ts
 import { blurhashToCss } from 'blurhash-to-css';
 
-const css = await blurhashToCss({
+const css = blurhashToCss({
   blurhash: 'eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU',
   height: 400,
   width: 600,

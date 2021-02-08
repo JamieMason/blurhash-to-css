@@ -1,12 +1,10 @@
 extern crate blurhash;
 extern crate console_error_panic_hook;
-extern crate image;
 extern crate serde;
 extern crate serde_json;
 extern crate wasm_bindgen;
 
 use blurhash::decode;
-use image::{Rgb, RgbImage};
 use serde::{Deserialize, Serialize};
 use std::panic;
 use wasm_bindgen::prelude::*;
@@ -33,32 +31,15 @@ fn blurhash_to_bytes(hash: String, width: u32, height: u32) -> Vec<u8> {
     decode(hash_slice, width, height, punch)
 }
 
-fn bytes_to_image_buffer(pixel_bytes: &[u8], width: u32, height: u32) -> RgbImage {
-    let mut image_buffer = RgbImage::new(width, height);
+fn get_pixel(pixel_bytes: &[u8], x: u32, y: u32, width: u32, index: u32) -> u8 {
     let number_of_channels = 4; // RGBa
     let bytes_per_row = width * number_of_channels;
-    let r_index = 0;
-    let g_index = 1;
-    let b_index = 2;
-    for y in 0..height {
-        for x in 0..width {
-            let r = pixel_bytes[(number_of_channels * x + r_index + y * bytes_per_row) as usize];
-            let g = pixel_bytes[(number_of_channels * x + g_index + y * bytes_per_row) as usize];
-            let b = pixel_bytes[(number_of_channels * x + b_index + y * bytes_per_row) as usize];
-            image_buffer.put_pixel(x, y, Rgb([r, g, b]));
-        }
-    }
-    image_buffer
-}
-
-fn blurhash_to_image_buffer(hash: String, width: u32, height: u32) -> RgbImage {
-    let pixel_bytes = blurhash_to_bytes(hash, width, height);
-    bytes_to_image_buffer(&pixel_bytes, width, height)
+    pixel_bytes[(number_of_channels * x + index + y * bytes_per_row) as usize]
 }
 
 fn blurhash_to_css_struct(hash: String, width: u32, height: u32) -> BlurhashCss {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
-    let image_buffer = blurhash_to_image_buffer(hash, width, height);
+    let pixel_bytes = blurhash_to_bytes(hash, width, height);
     let r_index = 0;
     let g_index = 1;
     let b_index = 2;
@@ -70,9 +51,9 @@ fn blurhash_to_css_struct(hash: String, width: u32, height: u32) -> BlurhashCss 
         let mut row_linear_gradients = Vec::new();
 
         for x in 0..width {
-            let r = image_buffer.get_pixel(x, y).data[r_index];
-            let g = image_buffer.get_pixel(x, y).data[g_index];
-            let b = image_buffer.get_pixel(x, y).data[b_index];
+            let r = get_pixel(&pixel_bytes, x, y, width, r_index);
+            let g = get_pixel(&pixel_bytes, x, y, width, g_index);
+            let b = get_pixel(&pixel_bytes, x, y, width, b_index);
 
             let start_percent = if x == 0 {
                 String::from("")
@@ -137,17 +118,6 @@ mod tests {
         let expected_rgba_bytes = 960000;
 
         assert_eq!(pixel_bytes.len(), expected_rgba_bytes);
-    }
-
-    #[test]
-    fn creates_image_buffers() {
-        let hash = String::from("eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU");
-        let width = 400;
-        let height = 600;
-        let pixel_bytes = blurhash_to_bytes(hash, width, height);
-        let image_buffer = bytes_to_image_buffer(&pixel_bytes, width, height);
-
-        assert_eq!(image_buffer.dimensions(), (400, 600));
     }
 
     #[test]

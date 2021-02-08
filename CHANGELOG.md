@@ -1,3 +1,10 @@
+## [0.4.3](https://github.com/JamieMason/blurhash-to-css/compare/0.3.3...0.4.3) (2021-02-08)
+
+### Features
+
+- **perf:** remove unneeded image buffer
+  ([c3aadc9](https://github.com/JamieMason/blurhash-to-css/commit/c3aadc909ce15ff1260252c17c9a4e598598783a))
+
 ## [0.3.3](https://github.com/JamieMason/blurhash-to-css/compare/0.3.2...0.3.3) (2021-02-07)
 
 ### Bug Fixes

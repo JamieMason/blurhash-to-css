@@ -2,7 +2,7 @@
   "name": "blurhash-to-css-nextjs-example",
   "version": "1.0.0",
   "dependencies": {
-    "blurhash-to-css": "0.3.3",
+    "blurhash-to-css": "0.4.3",
     "next": "latest",
     "react": "17.0.1",
     "react-dom": "17.0.1"

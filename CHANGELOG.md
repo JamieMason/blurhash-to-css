@@ -1,3 +1,17 @@
+## [0.5.5](https://github.com/JamieMason/blurhash-to-css/compare/0.4.3...0.5.5) (2022-11-12)
+
+### Bug Fixes
+
+- **cargo:** update dependencies
+  ([3c6e1d7](https://github.com/JamieMason/blurhash-to-css/commit/3c6e1d7ee1b293da4659c97f5a69730e0ba931be))
+- **npm:** update dependencies
+  ([e43dec9](https://github.com/JamieMason/blurhash-to-css/commit/e43dec97bd4b5756a9cd8919c4f6ebcad9182e48))
+
+### Features
+
+- **blurhash:** accept arrays of blurhashes
+  ([3afacfc](https://github.com/JamieMason/blurhash-to-css/commit/3afacfcc75e24461f9ba9ccbfeb61287eb550662))
+
 ## [0.4.3](https://github.com/JamieMason/blurhash-to-css/compare/0.3.3...0.4.3) (2021-02-08)
 
 ### Features

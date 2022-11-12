@@ -1,6 +1,6 @@
 # blurhash-to-css
 
-Convert a blurhash string to a CSS object
+Convert blurhash strings to CSS objects
 
 ## Installation
 
@@ -28,10 +28,12 @@ None
 
 - [@types/jest](https://ghub.io/@types/jest): TypeScript definitions for Jest
 - [jest](https://ghub.io/jest): Delightful JavaScript Testing.
-- [ts-jest](https://ghub.io/ts-jest): A preprocessor with source maps support to
-  help use TypeScript with Jest
+- [ts-jest](https://ghub.io/ts-jest): A Jest transformer with source map support
+  that lets you use Jest to test projects written in TypeScript
 - [typescript](https://ghub.io/typescript): TypeScript is a language for
   application scale JavaScript development
+- [wasm-pack](https://ghub.io/wasm-pack): 📦✨ your favorite rust -&gt; wasm
+  workflow tool!
 
 ## License
 

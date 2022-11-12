@@ -5,6 +5,7 @@ extern crate serde_json;
 extern crate wasm_bindgen;
 
 use blurhash::decode;
+use gloo_utils::format::JsValueSerdeExt;
 use serde::{Deserialize, Serialize};
 use std::panic;
 use wasm_bindgen::prelude::*;
@@ -25,7 +26,7 @@ fn get_rounded_percentage_of(part: u32, whole: u32) -> u32 {
     value.round() as u32
 }
 
-fn blurhash_to_bytes(hash: String, width: u32, height: u32) -> Vec<u8> {
+fn blurhash_to_bytes(hash: &String, width: u32, height: u32) -> Vec<u8> {
     let hash_slice: &str = &hash[..];
     let punch = 1.0;
     decode(hash_slice, width, height, punch)
@@ -37,9 +38,9 @@ fn get_pixel(pixel_bytes: &[u8], x: u32, y: u32, width: u32, index: u32) -> u8 {
     pixel_bytes[(number_of_channels * x + index + y * bytes_per_row) as usize]
 }
 
-fn blurhash_to_css_struct(hash: String, width: u32, height: u32) -> BlurhashCss {
+fn blurhash_to_css_struct(hash: &String, width: u32, height: u32) -> BlurhashCss {
     panic::set_hook(Box::new(console_error_panic_hook::hook));
-    let pixel_bytes = blurhash_to_bytes(hash, width, height);
+    let pixel_bytes = blurhash_to_bytes(&hash, width, height);
     let r_index = 0;
     let g_index = 1;
     let b_index = 2;
@@ -95,8 +96,18 @@ fn blurhash_to_css_struct(hash: String, width: u32, height: u32) -> BlurhashCss 
 
 #[wasm_bindgen]
 pub fn blurhash_to_css(hash: String, width: u32, height: u32) -> String {
-    let css_struct = blurhash_to_css_struct(hash, width, height);
+    let css_struct = blurhash_to_css_struct(&hash, width, height);
     serde_json::to_string(&css_struct).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn blurhashes_to_css(hashes: JsValue, width: u32, height: u32) -> String {
+    let hashes: Vec<String> = hashes.into_serde().unwrap();
+    let css_structs: Vec<BlurhashCss> = hashes
+        .iter()
+        .map(|hash| blurhash_to_css_struct(&hash, width, height))
+        .collect();
+    serde_json::to_string(&css_structs).unwrap()
 }
 
 #[cfg(test)]
@@ -110,22 +121,22 @@ mod tests {
     }
 
     #[test]
-    fn decodes_blurhashes() {
-        let hash = String::from("eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU");
+    fn decodes_blurhash_into_bytes() {
+        let hash = String::from("LEHLh[WB2yk8pyoJadR*.7kCMdnj");
         let width = 400;
         let height = 600;
-        let pixel_bytes = blurhash_to_bytes(hash, width, height);
+        let pixel_bytes = blurhash_to_bytes(&hash, width, height);
         let expected_rgba_bytes = 960000;
 
         assert_eq!(pixel_bytes.len(), expected_rgba_bytes);
     }
 
     #[test]
-    fn converts_blurhashes_into_css_structs() {
-        let hash = String::from("eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU");
+    fn converts_blurhash_into_css_struct() {
+        let hash = String::from("LEHLh[WB2yk8pyoJadR*.7kCMdnj");
         let width = 10;
         let height = 10;
-        let css_struct = blurhash_to_css_struct(hash, width, height);
+        let css_struct = blurhash_to_css_struct(&hash, width, height);
 
         assert_eq!(
             css_struct.background_position,
@@ -134,17 +145,17 @@ mod tests {
         assert_eq!(css_struct.background_repeat, "no-repeat");
         assert_eq!(css_struct.background_size, "100% 10%");
         assert_eq!(css_struct.filter, "blur(24px)");
-        assert_eq!(css_struct.background_image, "linear-gradient(90deg,rgb(144,157,98) 10%,rgb(153,162,114) 10% 20%,rgb(171,173,140) 20% 30%,rgb(183,183,156) 30% 40%,rgb(183,186,156) 40% 50%,rgb(174,182,144) 50% 60%,rgb(160,171,127) 60% 70%,rgb(147,160,113) 70% 80%,rgb(139,152,104) 80% 90%,rgb(134,149,98) 90% 100%),linear-gradient(90deg,rgb(132,148,87) 10%,rgb(140,152,101) 10% 20%,rgb(156,162,126) 20% 30%,rgb(169,171,141) 30% 40%,rgb(171,175,142) 40% 50%,rgb(163,171,131) 50% 60%,rgb(148,160,115) 60% 70%,rgb(134,149,101) 70% 80%,rgb(127,142,93) 80% 90%,rgb(126,140,89) 90% 100%),linear-gradient(90deg,rgb(109,129,62) 10%,rgb(114,130,73) 10% 20%,rgb(126,136,94) 20% 30%,rgb(139,145,109) 30% 40%,rgb(146,150,114) 40% 50%,rgb(141,148,107) 50% 60%,rgb(125,137,93) 60% 70%,rgb(107,123,78) 70% 80%,rgb(102,118,70) 80% 90%,rgb(109,121,71) 90% 100%),linear-gradient(90deg,rgb(103,119,58) 10%,rgb(105,119,67) 10% 20%,rgb(114,123,86) 20% 30%,rgb(129,132,104) 30% 40%,rgb(141,141,113) 40% 50%,rgb(140,140,111) 50% 60%,rgb(123,128,99) 60% 70%,rgb(101,111,83) 70% 80%,rgb(96,105,73) 80% 90%,rgb(108,112,74) 90% 100%),linear-gradient(90deg,rgb(121,127,83) 10%,rgb(124,128,93) 10% 20%,rgb(134,134,116) 20% 30%,rgb(150,146,135) 30% 40%,rgb(162,157,146) 40% 50%,rgb(162,157,144) 50% 60%,rgb(147,144,132) 60% 70%,rgb(126,125,115) 70% 80%,rgb(117,115,100) 80% 90%,rgb(122,119,94) 90% 100%),linear-gradient(90deg,rgb(132,134,100) 10%,rgb(137,137,113) 10% 20%,rgb(150,146,137) 20% 30%,rgb(167,160,159) 30% 40%,rgb(179,172,169) 40% 50%,rgb(178,172,167) 50% 60%,rgb(164,159,154) 60% 70%,rgb(144,140,136) 70% 80%,rgb(130,126,117) 80% 90%,rgb(127,124,104) 90% 100%),linear-gradient(90deg,rgb(123,128,97) 10%,rgb(128,131,109) 10% 20%,rgb(143,141,133) 20% 30%,rgb(160,155,154) 30% 40%,rgb(173,168,165) 40% 50%,rgb(173,169,164) 50% 60%,rgb(160,157,152) 60% 70%,rgb(139,137,133) 70% 80%,rgb(120,120,111) 80% 90%,rgb(111,113,93) 90% 100%),linear-gradient(90deg,rgb(101,112,74) 10%,rgb(105,114,84) 10% 20%,rgb(117,121,105) 20% 30%,rgb(135,134,125) 30% 40%,rgb(149,146,138) 40% 50%,rgb(151,148,139) 50% 60%,rgb(140,138,128) 60% 70%,rgb(118,119,109) 70% 80%,rgb(95,100,85) 80% 90%,rgb(81,90,63) 90% 100%),linear-gradient(90deg,rgb(94,102,40) 10%,rgb(94,102,51) 10% 20%,rgb(100,104,71) 20% 30%,rgb(114,112,91) 30% 40%,rgb(128,122,104) 40% 50%,rgb(133,125,106) 50% 60%,rgb(124,117,97) 60% 70%,rgb(103,100,78) 70% 80%,rgb(82,84,53) 80% 90%,rgb(71,76,28) 90% 100%),linear-gradient(90deg,rgb(109,106,16) 10%,rgb(108,105,34) 10% 20%,rgb(109,103,59) 20% 30%,rgb(117,106,78) 30% 40%,rgb(128,113,88) 40% 50%,rgb(132,115,87) 50% 60%,rgb(124,108,77) 60% 70%,rgb(109,96,59) 70% 80%,rgb(95,86,40) 80% 90%,rgb(90,83,26) 90% 100%)");
+        assert_eq!(css_struct.background_image, "linear-gradient(90deg,rgb(134,164,177) 10%,rgb(140,165,177) 10% 20%,rgb(153,170,177) 20% 30%,rgb(168,175,176) 30% 40%,rgb(178,179,173) 40% 50%,rgb(181,179,171) 50% 60%,rgb(176,177,170) 60% 70%,rgb(166,173,172) 70% 80%,rgb(152,169,176) 80% 90%,rgb(141,166,179) 90% 100%),linear-gradient(90deg,rgb(133,162,176) 10%,rgb(138,164,176) 10% 20%,rgb(152,168,175) 20% 30%,rgb(166,172,173) 30% 40%,rgb(176,175,170) 40% 50%,rgb(179,176,167) 50% 60%,rgb(174,174,167) 60% 70%,rgb(164,171,170) 70% 80%,rgb(151,167,174) 80% 90%,rgb(140,165,179) 90% 100%),linear-gradient(90deg,rgb(129,160,174) 10%,rgb(135,160,173) 10% 20%,rgb(148,162,169) 20% 30%,rgb(161,163,165) 30% 40%,rgb(171,164,159) 40% 50%,rgb(173,165,156) 50% 60%,rgb(169,165,157) 60% 70%,rgb(159,163,162) 70% 80%,rgb(147,162,170) 80% 90%,rgb(137,161,176) 90% 100%),linear-gradient(90deg,rgb(124,156,170) 10%,rgb(130,155,168) 10% 20%,rgb(142,153,162) 20% 30%,rgb(155,151,153) 30% 40%,rgb(164,149,144) 40% 50%,rgb(166,150,140) 50% 60%,rgb(162,151,142) 60% 70%,rgb(153,153,152) 70% 80%,rgb(142,155,163) 80% 90%,rgb(133,156,172) 90% 100%),linear-gradient(90deg,rgb(121,151,166) 10%,rgb(126,149,163) 10% 20%,rgb(137,144,153) 20% 30%,rgb(149,138,140) 30% 40%,rgb(158,134,127) 40% 50%,rgb(160,134,121) 50% 60%,rgb(156,138,127) 60% 70%,rgb(148,143,140) 70% 80%,rgb(138,148,156) 80% 90%,rgb(129,151,167) 90% 100%),linear-gradient(90deg,rgb(119,147,161) 10%,rgb(124,144,157) 10% 20%,rgb(135,137,146) 20% 30%,rgb(146,129,129) 30% 40%,rgb(155,124,114) 40% 50%,rgb(158,124,107) 50% 60%,rgb(154,130,114) 60% 70%,rgb(146,136,131) 70% 80%,rgb(136,142,149) 80% 90%,rgb(128,146,162) 90% 100%),linear-gradient(90deg,rgb(121,144,157) 10%,rgb(125,142,152) 10% 20%,rgb(135,135,141) 20% 30%,rgb(147,128,124) 30% 40%,rgb(156,124,108) 40% 50%,rgb(159,124,101) 50% 60%,rgb(157,129,108) 60% 70%,rgb(149,135,126) 70% 80%,rgb(138,140,143) 80% 90%,rgb(129,143,156) 90% 100%),linear-gradient(90deg,rgb(125,143,152) 10%,rgb(129,141,149) 10% 20%,rgb(139,137,139) 20% 30%,rgb(151,133,124) 30% 40%,rgb(160,131,111) 40% 50%,rgb(165,133,105) 50% 60%,rgb(163,136,111) 60% 70%,rgb(155,139,125) 70% 80%,rgb(143,141,140) 80% 90%,rgb(131,142,151) 90% 100%),linear-gradient(90deg,rgb(130,143,149) 10%,rgb(134,142,146) 10% 20%,rgb(144,142,139) 20% 30%,rgb(156,141,128) 30% 40%,rgb(166,142,119) 40% 50%,rgb(172,144,115) 50% 60%,rgb(170,146,118) 60% 70%,rgb(162,146,128) 70% 80%,rgb(148,144,139) 80% 90%,rgb(134,142,148) 90% 100%),linear-gradient(90deg,rgb(134,143,147) 10%,rgb(138,144,145) 10% 20%,rgb(147,145,139) 20% 30%,rgb(160,148,132) 30% 40%,rgb(171,151,125) 40% 50%,rgb(177,153,122) 50% 60%,rgb(176,153,125) 60% 70%,rgb(167,151,131) 70% 80%,rgb(152,147,139) 80% 90%,rgb(137,143,145) 90% 100%)");
         assert_eq!(css_struct.transform, "scale(1.2)");
     }
 
     #[test]
-    fn converts_blurhashes_into_css_json() {
-        let hash = String::from("eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU");
+    fn converts_blurhash_into_css_json() {
+        let hash = String::from("LEHLh[WB2yk8pyoJadR*.7kCMdnj");
         let width = 10;
         let height = 10;
         let css_json = blurhash_to_css(hash, width, height);
 
-        assert_eq!(css_json, "{\"backgroundImage\":\"linear-gradient(90deg,rgb(144,157,98) 10%,rgb(153,162,114) 10% 20%,rgb(171,173,140) 20% 30%,rgb(183,183,156) 30% 40%,rgb(183,186,156) 40% 50%,rgb(174,182,144) 50% 60%,rgb(160,171,127) 60% 70%,rgb(147,160,113) 70% 80%,rgb(139,152,104) 80% 90%,rgb(134,149,98) 90% 100%),linear-gradient(90deg,rgb(132,148,87) 10%,rgb(140,152,101) 10% 20%,rgb(156,162,126) 20% 30%,rgb(169,171,141) 30% 40%,rgb(171,175,142) 40% 50%,rgb(163,171,131) 50% 60%,rgb(148,160,115) 60% 70%,rgb(134,149,101) 70% 80%,rgb(127,142,93) 80% 90%,rgb(126,140,89) 90% 100%),linear-gradient(90deg,rgb(109,129,62) 10%,rgb(114,130,73) 10% 20%,rgb(126,136,94) 20% 30%,rgb(139,145,109) 30% 40%,rgb(146,150,114) 40% 50%,rgb(141,148,107) 50% 60%,rgb(125,137,93) 60% 70%,rgb(107,123,78) 70% 80%,rgb(102,118,70) 80% 90%,rgb(109,121,71) 90% 100%),linear-gradient(90deg,rgb(103,119,58) 10%,rgb(105,119,67) 10% 20%,rgb(114,123,86) 20% 30%,rgb(129,132,104) 30% 40%,rgb(141,141,113) 40% 50%,rgb(140,140,111) 50% 60%,rgb(123,128,99) 60% 70%,rgb(101,111,83) 70% 80%,rgb(96,105,73) 80% 90%,rgb(108,112,74) 90% 100%),linear-gradient(90deg,rgb(121,127,83) 10%,rgb(124,128,93) 10% 20%,rgb(134,134,116) 20% 30%,rgb(150,146,135) 30% 40%,rgb(162,157,146) 40% 50%,rgb(162,157,144) 50% 60%,rgb(147,144,132) 60% 70%,rgb(126,125,115) 70% 80%,rgb(117,115,100) 80% 90%,rgb(122,119,94) 90% 100%),linear-gradient(90deg,rgb(132,134,100) 10%,rgb(137,137,113) 10% 20%,rgb(150,146,137) 20% 30%,rgb(167,160,159) 30% 40%,rgb(179,172,169) 40% 50%,rgb(178,172,167) 50% 60%,rgb(164,159,154) 60% 70%,rgb(144,140,136) 70% 80%,rgb(130,126,117) 80% 90%,rgb(127,124,104) 90% 100%),linear-gradient(90deg,rgb(123,128,97) 10%,rgb(128,131,109) 10% 20%,rgb(143,141,133) 20% 30%,rgb(160,155,154) 30% 40%,rgb(173,168,165) 40% 50%,rgb(173,169,164) 50% 60%,rgb(160,157,152) 60% 70%,rgb(139,137,133) 70% 80%,rgb(120,120,111) 80% 90%,rgb(111,113,93) 90% 100%),linear-gradient(90deg,rgb(101,112,74) 10%,rgb(105,114,84) 10% 20%,rgb(117,121,105) 20% 30%,rgb(135,134,125) 30% 40%,rgb(149,146,138) 40% 50%,rgb(151,148,139) 50% 60%,rgb(140,138,128) 60% 70%,rgb(118,119,109) 70% 80%,rgb(95,100,85) 80% 90%,rgb(81,90,63) 90% 100%),linear-gradient(90deg,rgb(94,102,40) 10%,rgb(94,102,51) 10% 20%,rgb(100,104,71) 20% 30%,rgb(114,112,91) 30% 40%,rgb(128,122,104) 40% 50%,rgb(133,125,106) 50% 60%,rgb(124,117,97) 60% 70%,rgb(103,100,78) 70% 80%,rgb(82,84,53) 80% 90%,rgb(71,76,28) 90% 100%),linear-gradient(90deg,rgb(109,106,16) 10%,rgb(108,105,34) 10% 20%,rgb(109,103,59) 20% 30%,rgb(117,106,78) 30% 40%,rgb(128,113,88) 40% 50%,rgb(132,115,87) 50% 60%,rgb(124,108,77) 60% 70%,rgb(109,96,59) 70% 80%,rgb(95,86,40) 80% 90%,rgb(90,83,26) 90% 100%)\",\"backgroundPosition\":\"0 0,0 11%,0 22%,0 33%,0 44%,0 56%,0 67%,0 78%,0 89%,0 100%\",\"backgroundRepeat\":\"no-repeat\",\"backgroundSize\":\"100% 10%\",\"filter\":\"blur(24px)\",\"transform\":\"scale(1.2)\"}");
+        assert_eq!(css_json, "{\"backgroundImage\":\"linear-gradient(90deg,rgb(134,164,177) 10%,rgb(140,165,177) 10% 20%,rgb(153,170,177) 20% 30%,rgb(168,175,176) 30% 40%,rgb(178,179,173) 40% 50%,rgb(181,179,171) 50% 60%,rgb(176,177,170) 60% 70%,rgb(166,173,172) 70% 80%,rgb(152,169,176) 80% 90%,rgb(141,166,179) 90% 100%),linear-gradient(90deg,rgb(133,162,176) 10%,rgb(138,164,176) 10% 20%,rgb(152,168,175) 20% 30%,rgb(166,172,173) 30% 40%,rgb(176,175,170) 40% 50%,rgb(179,176,167) 50% 60%,rgb(174,174,167) 60% 70%,rgb(164,171,170) 70% 80%,rgb(151,167,174) 80% 90%,rgb(140,165,179) 90% 100%),linear-gradient(90deg,rgb(129,160,174) 10%,rgb(135,160,173) 10% 20%,rgb(148,162,169) 20% 30%,rgb(161,163,165) 30% 40%,rgb(171,164,159) 40% 50%,rgb(173,165,156) 50% 60%,rgb(169,165,157) 60% 70%,rgb(159,163,162) 70% 80%,rgb(147,162,170) 80% 90%,rgb(137,161,176) 90% 100%),linear-gradient(90deg,rgb(124,156,170) 10%,rgb(130,155,168) 10% 20%,rgb(142,153,162) 20% 30%,rgb(155,151,153) 30% 40%,rgb(164,149,144) 40% 50%,rgb(166,150,140) 50% 60%,rgb(162,151,142) 60% 70%,rgb(153,153,152) 70% 80%,rgb(142,155,163) 80% 90%,rgb(133,156,172) 90% 100%),linear-gradient(90deg,rgb(121,151,166) 10%,rgb(126,149,163) 10% 20%,rgb(137,144,153) 20% 30%,rgb(149,138,140) 30% 40%,rgb(158,134,127) 40% 50%,rgb(160,134,121) 50% 60%,rgb(156,138,127) 60% 70%,rgb(148,143,140) 70% 80%,rgb(138,148,156) 80% 90%,rgb(129,151,167) 90% 100%),linear-gradient(90deg,rgb(119,147,161) 10%,rgb(124,144,157) 10% 20%,rgb(135,137,146) 20% 30%,rgb(146,129,129) 30% 40%,rgb(155,124,114) 40% 50%,rgb(158,124,107) 50% 60%,rgb(154,130,114) 60% 70%,rgb(146,136,131) 70% 80%,rgb(136,142,149) 80% 90%,rgb(128,146,162) 90% 100%),linear-gradient(90deg,rgb(121,144,157) 10%,rgb(125,142,152) 10% 20%,rgb(135,135,141) 20% 30%,rgb(147,128,124) 30% 40%,rgb(156,124,108) 40% 50%,rgb(159,124,101) 50% 60%,rgb(157,129,108) 60% 70%,rgb(149,135,126) 70% 80%,rgb(138,140,143) 80% 90%,rgb(129,143,156) 90% 100%),linear-gradient(90deg,rgb(125,143,152) 10%,rgb(129,141,149) 10% 20%,rgb(139,137,139) 20% 30%,rgb(151,133,124) 30% 40%,rgb(160,131,111) 40% 50%,rgb(165,133,105) 50% 60%,rgb(163,136,111) 60% 70%,rgb(155,139,125) 70% 80%,rgb(143,141,140) 80% 90%,rgb(131,142,151) 90% 100%),linear-gradient(90deg,rgb(130,143,149) 10%,rgb(134,142,146) 10% 20%,rgb(144,142,139) 20% 30%,rgb(156,141,128) 30% 40%,rgb(166,142,119) 40% 50%,rgb(172,144,115) 50% 60%,rgb(170,146,118) 60% 70%,rgb(162,146,128) 70% 80%,rgb(148,144,139) 80% 90%,rgb(134,142,148) 90% 100%),linear-gradient(90deg,rgb(134,143,147) 10%,rgb(138,144,145) 10% 20%,rgb(147,145,139) 20% 30%,rgb(160,148,132) 30% 40%,rgb(171,151,125) 40% 50%,rgb(177,153,122) 50% 60%,rgb(176,153,125) 60% 70%,rgb(167,151,131) 70% 80%,rgb(152,147,139) 80% 90%,rgb(137,143,145) 90% 100%)\",\"backgroundPosition\":\"0 0,0 11%,0 22%,0 33%,0 44%,0 56%,0 67%,0 78%,0 89%,0 100%\",\"backgroundRepeat\":\"no-repeat\",\"backgroundSize\":\"100% 10%\",\"filter\":\"blur(24px)\",\"transform\":\"scale(1.2)\"}");
     }
 }

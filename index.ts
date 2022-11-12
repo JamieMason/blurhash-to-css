@@ -1,4 +1,4 @@
-import { blurhash_to_css } from './pkg/blurhash_to_css';
+import { blurhash_to_css, blurhashes_to_css } from './pkg/blurhash_to_css';
 
 export interface BlurhashCss {
   backgroundImage: string;
@@ -9,11 +9,21 @@ export interface BlurhashCss {
   transform: string;
 }
 
-export function blurhashToCss(
-  blurhash: string,
-  options?: { width: number; height: number }
-): BlurhashCss {
+export interface Options {
+  width: number;
+  height: number;
+}
+
+export type BlurhashToCss = {
+  (blurhash: string, options?: Options): BlurhashCss;
+  (blurhashes: string[], options?: Options): BlurhashCss[];
+};
+
+export const blurhashToCss: BlurhashToCss = (blurhash, options) => {
   const height = options?.height || 10;
   const width = options?.width || 10;
-  return JSON.parse(blurhash_to_css(blurhash, width, height)) as BlurhashCss;
-}
+  const json = Array.isArray(blurhash)
+    ? blurhashes_to_css(blurhash, width, height)
+    : blurhash_to_css(blurhash, width, height);
+  return JSON.parse(json);
+};

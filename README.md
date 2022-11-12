@@ -1,14 +1,8 @@
 # blurhash-to-css
 
-> Converts a [BlurHash](https://blurha.sh) to a
-> [CSS Object](https://developer.mozilla.org/en-US/docs/Web/API/ElementCSSInlineStyle/style) using
-> [TypeScript](https://www.typescriptlang.org/), [Rust](https://www.rust-lang.org/), and
-> [WebAssembly](https://github.com/rustwasm/wasm-pack).
+> Converts a [BlurHash](https://blurha.sh) to a [CSS Object](https://developer.mozilla.org/en-US/docs/Web/API/ElementCSSInlineStyle/style) using [TypeScript](https://www.typescriptlang.org/), [Rust](https://www.rust-lang.org/), and [WebAssembly](https://github.com/rustwasm/wasm-pack).
 
-[![NPM version](http://img.shields.io/npm/v/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
-[![NPM downloads](http://img.shields.io/npm/dm/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css)
-[![Follow JamieMason on GitHub](https://img.shields.io/github/followers/JamieMason.svg?style=social&label=Follow)](https://github.com/JamieMason)
-[![Follow fold_left on Twitter](https://img.shields.io/twitter/follow/fold_left.svg?style=social&label=Follow)](https://twitter.com/fold_left)
+[![NPM version](http://img.shields.io/npm/v/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css) [![NPM downloads](http://img.shields.io/npm/dm/blurhash-to-css.svg?style=flat-square)](https://www.npmjs.com/package/blurhash-to-css) [![Follow JamieMason on GitHub](https://img.shields.io/github/followers/JamieMason.svg?style=social&label=Follow)](https://github.com/JamieMason) [![Follow fold_left on Twitter](https://img.shields.io/twitter/follow/fold_left.svg?style=social&label=Follow)](https://twitter.com/fold_left)
 
 ## 🌩 Installation
 
@@ -18,25 +12,16 @@ npm install blurhash-to-css
 
 ## 📣 Summary
 
-[BlurHash](https://blurha.sh) is a compact representation of a placeholder for an image, which makes
-it a great option to [improve perceived load times](https://blog.imgix.com/2021/01/26/blurhash).
-But, a BlurHash is rendered using a `<canvas>` element, which means client-side JavaScript is needed
-on the critical path when loading our application.
+[BlurHash](https://blurha.sh) is a compact representation of a placeholder for an image, which makes it a great option to [improve perceived load times](https://blog.imgix.com/2021/01/26/blurhash). But, a BlurHash is rendered using a `<canvas>` element, which means client-side JavaScript is needed on the critical path when loading our application.
 
-This tool creates the same visual effect using CSS, which can be rendered on the Server without any
-dependency on client-side JavaScript.
+This tool creates the same visual effect using CSS, which can be rendered on the Server without any dependency on client-side JavaScript.
 
-An example can be seen at https://blurhash-to-css.vercel.app and the source is in this repo at
-[`/example`](https://github.com/JamieMason/blurhash-to-css/tree/main/example).
+An example can be seen at https://blurhash-to-css.vercel.app and the source is in this repo at [`/example`](https://github.com/JamieMason/blurhash-to-css/tree/main/example).
 
 ## 🤝 Credit
 
-- The image buffer to CSS conversion is a port to Rust of
-  [this Script](https://github.com/joe-bell/plaiceholder/blob/d09df807df5d11c5d91a7971c2f90e2faa845843/packages/css/src/index.ts#L18-L51)
-  originally by [**@joe-bell**](https://github.com/joe-bell) for
-  [plaiceholder: Beautiful image placeholders, without the hassle](https://plaiceholder.co/).
-- A lot of help came from the source code in [wasm-image](https://github.com/peerigon/wasm-image) by
-  [**@acidicX**](https://github.com/acidicX).
+- The image buffer to CSS conversion is a port to Rust of [this Script](https://github.com/joe-bell/plaiceholder/blob/d09df807df5d11c5d91a7971c2f90e2faa845843/packages/css/src/index.ts#L18-L51) originally by [**@joe-bell**](https://github.com/joe-bell) for [plaiceholder: Beautiful image placeholders, without the hassle](https://plaiceholder.co/).
+- A lot of help came from the source code in [wasm-image](https://github.com/peerigon/wasm-image) by [**@acidicX**](https://github.com/acidicX).
 
 ## 🕹 Usage
 
@@ -69,19 +54,14 @@ const { blurhashToCss } = require('blurhash-to-css');
 
 ### `blurhash` (required)
 
-A small string generated to represent a blurry version of an image which will download sometime
-soon. Have a play around on [BlurHash](https://blurha.sh),
-[plaiceholder.co](https://plaiceholder.co/), and have a read of
-[BlurHash for imgix: An Alternative to Generic Image Placeholders](https://blog.imgix.com/2021/01/26/blurhash)
-to try them out and find out more.
+A small string (or array of strings) generated to represent a blurry version of an image which will download sometime soon. Have a play around on [BlurHash](https://blurha.sh), [plaiceholder.co](https://plaiceholder.co/), and have a read of [BlurHash for imgix: An Alternative to Generic Image Placeholders](https://blog.imgix.com/2021/01/26/blurhash) to try them out and find out more.
 
 ### `width` and `height` (optional)
 
-The BlurHash is decoded into a 10 x 10 image by default, you can make this larger and it will look
-more like the final image, but it will also generate a lot more CSS.
+The BlurHash is decoded into a 10 x 10 image by default, you can make this larger and it will look more like the final image, but it will also generate a lot more CSS.
 
 ```ts
-const css = blurhashToCss('eCF6B#-:0JInxr?@s;nmIoWUIko1%NocRk.8xbIUaxR*^+s;RiWAWU', {
+const css = blurhashToCss('LEHLh[WB2yk8pyoJadR*.7kCMdnj', {
   height: 30,
   width: 30,
 });

@@ -1,6 +1,6 @@
 {
   "name": "blurhash-to-css",
-  "description": "Convert a blurhash string to a CSS object",
+  "description": "Convert blurhash strings to CSS objects",
   "version": "0.4.3",
   "author": "Jamie Mason <jamie@foldleft.io> (https://github.com/JamieMason)",
   "bugs": "https://github.com/JamieMason/blurhash-to-css/issues",
